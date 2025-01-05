@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selamat Datang di Audiophilez Chatbot</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body.dark-mode {
+            background-color: #121212;
+            color: #ffffff;
+        }
+
+        .container {
+            display: flex;
+            max-width: 1200px;
+            width: 100%;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: outline 0.3s ease;
+        }
+
+        body.dark-mode .container {
+            outline: 2px solid #ccc; /* Gray outline */
+        }
+
+        .left-container {
+            flex: 1;
+            background: url('{{ url_for("static", filename="picture/Background2.png") }}') no-repeat center center;
+            background-size: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            padding: 20px;
+            position: relative;
+            transition: background-color 0.3s ease;
+        }
+
+        .left-container.dark-mode {
+            background-color: #333; /* Dark background for dark mode */
+        }
+
+        .right-container {
+            flex: 1;
+            background: white;
+            padding: 40px;
+            text-align: center;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .right-container.dark-mode {
+            background: #2c2c2c; /* Dark background for right-container in dark mode */
+        }
+
+        .logo {
+            background: linear-gradient(135deg, #00796b, #004d40);
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .logo i {
+            font-size: 60px;
+            color: white;
+            animation: blink 4s infinite;
+        }
+
+        @keyframes float {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        @keyframes blink {
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 0.4;
+            }
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2.5em;
+            transition: color 0.3s ease;
+        }
+
+        .description {
+            margin-bottom: 30px;
+            line-height: 1.6;
+            transition: color 0.3s ease;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .feature {
+            background: #00796b; /* Tosca Green */
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            transition: transform 0.3s ease, background-color 0.3s;
+        }
+
+        .feature:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature i {
+            color: white;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .feature h3 {
+            color: white;
+            margin: 10px 0;
+        }
+
+        .start-button {
+            background: #2196f3; /* Biru */
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .start-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+        }
+
+        footer a {
+            color: #598fdf;
+            text-decoration: none;
+        }
+
+        /* Dark/Light Mode Toggle Button */
+        .theme-toggle {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            width: 120px; /* Lebih panjang ke kanan */
+            height: 40px;
+            background-color: transparent;
+            border: 2px solid #ccc; /* Border abu-abu */
+            border-radius: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            padding: 5px;
+        }
+
+        .theme-toggle .toggle-circle {
+            width: 30px;
+            height: 30px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            position: absolute;
+            left: 5px; /* Awal posisi di kiri */
+        }
+
+        .theme-toggle i {
+            font-size: 18px;
+            color: white;
+        }
+
+        .theme-toggle span {
+            display: none;
+        }
+
+        .theme-toggle.dark-mode {
+            background-color: #333;
+        }
+
+        .theme-toggle.dark-mode .toggle-circle {
+            transform: translateX(70px); /* Geser ke kanan saat dark mode */
+        }
+
+        .theme-toggle.dark-mode i {
+            display: none;
+        }
+
+        .theme-toggle.dark-mode span {
+            display: inline-block;
+            color: white;
+            font-size: 16px;
+        }
+
+        /* Ikon bulan dan matahari */
+        .theme-toggle .fa-sun {
+            color: #ff6347; /* Merah */
+        }
+
+        .theme-toggle .fa-moon {
+            color: #fff; /* Putih */
+        }
+
+        .theme-toggle .moon-icon {
+            background: url('{{ url_for("static", filename="picture/moon.png") }}') no-repeat center center;
+            width: 25px;
+            height: 25px;
+            background-size: contain;
+        }
+
+        .theme-toggle .sun-icon {
+            background: url('{{ url_for("static", filename="picture/sun.png") }}') no-repeat center center;
+            width: 25px;
+            height: 25px;
+            background-size: contain;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="left-container">
+            <!-- Left container intentionally left empty for background image -->
+            <button class="theme-toggle" id="themeToggle">
+                <span class="sun-icon"></span>
+                <div class="toggle-circle"></div>
+                <span class="moon-icon"></span>
+            </button>
+        </div>
+        <div class="right-container">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='picture/Logo.png') }}" alt="Logo" style="width: 120px; height: 120px; border-radius: 50%;">
+            </div>
+            <h1>Selamat Datang Di Audiophilez Chatbot</h1>
+            <p class="description">
+                Chatbot AI Audiophilez adalah asisten virtual cerdas yang dirancang khusus untuk penggemar audio, membantu memilih perangkat dan memberikan rekomendasi pengaturan suara optimal. Dengan pengetahuan mendalam tentang perangkat audio seperti headphone, speaker, dan teknologi terbaru, chatbot ini cocok bagi pemula hingga audiophile berpengalaman.
+            </p>
+
+            <div class="features">
+                <div class="feature">
+                    <i class="fas fa-headphones"></i>
+                    <h3>Audiophile Gear Info</h3>
+                    <p>Chatbot AI Audiophilez membantu pengguna memilih perangkat audio dan pengaturan suara yang sesuai dengan kebutuhan dan preferensi musik, memastikan pengalaman mendengarkan yang optimal.</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-volume-up"></i>
+                    <h3>Audiophile Gear Tips</h3>
+                    <p>Chatbot ini membantu pengguna mengatur perangkat audio dengan optimal, memberikan tips pengaturan suara yang sesuai untuk berbagai jenis musik dan lingkungan, sehingga pengalaman mendengarkan menjadi lebih memuaskan.</p>
+                </div>
+            </div>
+
+            <a href="/chat" class="start-button">
+                <i class="fas fa-comments"></i>
+                Mulai Percakapan
+            </a>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Ilham Maryan Mahantara. All rights reserved.
+            <a href="https://github.com/buriihenry/chatbot" target="_blank">
+                Lihat proyek yang saya modifikasi di GitHub
+            </a>
+        </p>
+    </footer>
+
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        const themeText = themeToggle.querySelector('span');
+        const themeIcon = themeToggle.querySelector('i');
+        const features = document.querySelectorAll('.feature');
+        const leftContainer = document.querySelector('.left-container');
+        const rightContainer = document.querySelector('.right-container');
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            features.forEach(feature => {
+                feature.classList.toggle('dark-mode');
+            });
+            leftContainer.classList.toggle('dark-mode');
+            rightContainer.classList.toggle('dark-mode');
+
+            if (body.classList.contains('dark-mode')) {
+                themeToggle.classList.add('dark-mode');
+            } else {
+                themeToggle.classList.remove('dark-mode');
+            }
+        });
+    </script>
+</body>
+
+</html>
+

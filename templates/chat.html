@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Ai - Audiophilez</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark-mode {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+            flex: 1;
+            background: url('/static/your-background-image.jpg') no-repeat center center;
+            background-size: cover;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(128, 128, 128, 0.3); /* Border warna abu transparan */
+        }
+
+        .container.dark-mode {
+            border: 1px solid rgba(128, 128, 128, 0.6); /* Border abu transparan lebih kuat di dark mode */
+            outline: 2px solid rgba(128, 128, 128, 0.6); /* Outline abu pada container */
+        }
+
+        .dashboard {
+            background: url('{{ url_for('static', filename='picture/Background1.jpg') }}') no-repeat center center;
+            background-size: cover;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            min-height: 500px; /* Menambahkan tinggi minimal untuk memperpanjang dashboard */
+            border: 1px solid rgba(128, 128, 128, 0.3);
+            
+        }
+
+        .dashboard.dark-mode {
+            background: url('{{ url_for('static', filename='picture/Background1.jpg') }}') no-repeat center center;
+            background-size: cover;
+            outline: 2px solid rgba(128, 128, 128, 0.6); /* Outline abu pada dashboard */
+        }
+
+        /* Efek Bounce untuk Logo */
+        @keyframes bounce {
+            0% {
+                transform: translateY(0);
+            }
+            25% {
+                transform: translateY(-10px);
+            }
+            50% {
+                transform: translateY(0);
+            }
+            75% {
+                transform: translateY(-5px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+       /* Gambar Logo dengan Efek Bounce */
+        .logo {
+            max-width: 100px;
+            margin-bottom: 15px;
+            animation: bounce 1s ease infinite;
+            display: block;
+            margin-left: auto;
+            margin-right: auto; /* Menyebabkan logo bergeser ke tengah */
+            transition: border 0.3s ease; /* Smooth transition for border */
+        }
+
+        /* Outline untuk logo saat di light mode */
+        body:not(.dark-mode) .logo {
+            border: 3px solid #000000; /* Outline berwarna hijau */
+            border-radius: 50%; /* Menambahkan border melingkar */
+        }
+
+        /* Outline untuk logo saat di dark mode */
+        body.dark-mode .logo {
+            border: 3px solid #888888; /* Outline berwarna biru muda di dark mode */
+            border-radius: 50%; /* Menambahkan border melingkar */
+        }
+
+        /* Penyesuaian pada dashboard title */
+        .dashboard-title {
+            color: #2091d3;
+            margin-bottom: 25px;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Menjaga title di tengah */
+            gap: 10px;
+        }
+
+        /* Untuk mode terang (light mode) */
+        .metric-card {
+            background: linear-gradient(145deg, #ffffff, #f5f5f5);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e0e0e0;
+            color: black; /* Teks berwarna hitam di light mode */
+        }
+
+        .metric-card .metric-title,
+        .metric-card .metric-value,
+        .metric-card .metric-icon i {
+            color: black; /* Teks dan ikon berwarna hitam di light mode */
+        }
+
+        /* Untuk mode gelap (dark mode) */
+        .metric-card.dark-mode {
+            background: #333333; /* Mengubah warna latar belakang menjadi hitam */
+            color: white; /* Teks menjadi putih di dark mode */
+            border: 1px solid #444444; /* Border sedikit lebih gelap di dark mode */
+        }
+
+        .metric-card.dark-mode .metric-title,
+        .metric-card.dark-mode .metric-value,
+        .metric-card.dark-mode .metric-icon i {
+            color: white; /* Teks dan ikon berwarna putih di dark mode */
+        }
+        
+        .metric-card {
+            background: linear-gradient(145deg, #ffffff, #f5f5f5);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e0e0e0;
+            color: black;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Menyusun konten secara vertikal di tengah */
+            align-items: center; /* Menyusun konten secara horizontal di tengah */
+            text-align: center; /* Menjaga teks tetap di tengah */
+        }
+
+        .metric-card .metric-header {
+            margin-bottom: 10px;
+        }
+
+        .metric-card .metric-title {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .metric-card .metric-value {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        /* Gaya umum untuk slider */
+.toggle-container {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+}
+
+/* Gaya untuk slider */
+.toggle {
+    position: relative;
+    width: 50px;
+    height: 25px;
+}
+
+/* Menyembunyikan checkbox */
+.toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* Gaya slider */
+.slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 15px;
+    display: flex;
+    justify-content: space-between; /* Memastikan ikon berada di kiri dan kanan */
+    padding: 5px;
+}
+
+/* Ikon matahari di sebelah kiri */
+.sun-icon {
+    position: absolute;
+    left: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #fbc02d; /* Warna kuning untuk matahari */
+}
+
+/* Ikon bulan di sebelah kanan */
+.moon-icon {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #ffffff; /* Warna putih untuk bulan */
+}
+
+/* Gaya slider sebelum checkbox diaktifkan */
+.slider:before {
+    position: absolute;
+    content: '';
+    height: 20px;
+    width: 20px;
+    left: 4px;
+    bottom: 2.5px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+/* Saat slider diaktifkan (dark mode) */
+input:checked + .slider {
+    background-color: #00796b;
+}
+
+/* Menggerakkan slider ke kanan saat diaktifkan */
+input:checked + .slider:before {
+    transform: translateX(25px);
+}
+
+/* Menyembunyikan ikon matahari dan bulan saat slider dalam mode tertentu */
+input:checked + .slider .sun-icon {
+    display: none;
+}
+
+input:not(:checked) + .slider .moon-icon {
+    display: none;
+}
+
+        input:checked + .slider {
+            background-color: #00796b;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(25px);
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+        }
+
+        footer a {
+            color: #598fdf;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .chat-container {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 800px; /* Increased width of the chat container */
+            margin: 0 auto;
+            border: 1px solid rgba(128, 128, 128, 0.3);
+        }
+
+        .chat-container.dark-mode {
+            background: rgba(18, 18, 18, 0.8);
+            outline: 2px solid rgba(128, 128, 128, 0.6); /* Outline abu pada chat container */
+        }
+
+        .chat-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #2091d3;
+            padding: 20px 0;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .chat-title {
+            font-size: 2em;
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        .chat-messages {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 20px; /* Added margin-top for space after the header */
+        }
+
+        /* Gaya umum untuk ikon logo pesan */
+        .message-icon {
+            display: inline-block;
+            margin-right: 15px; /* Memberikan jarak lebih besar antara ikon dan pesan */
+            vertical-align: top; /* Menyelaraskan ikon dengan teks pesan */
+        }
+
+        .message-logo {
+            width: 40px; /* Ukuran logo lebih besar */
+            height: 40px; /* Menjaga logo tetap proporsional */
+            border-radius: 50%; /* Membuat gambar menjadi bentuk bulat */
+            object-fit: cover; /* Memastikan gambar tetap proporsional meskipun ukuran berbeda */
+        }
+
+        /* Gaya untuk pesan */
+        .message {
+            display: flex;
+            align-items: flex-start; /* Menyelaraskan logo dan pesan di bagian atas */
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 20px; /* Membuat bentuk chat bubble */
+            max-width: 80%; /* Lebar pesan tidak terlalu besar */
+            word-wrap: break-word; /* Agar teks pesan yang panjang terbungkus dengan baik */
+        }
+
+        /* Gaya untuk pesan dari user */
+        .user-message {
+            background-color: #e0f7fa; /* Warna latar belakang untuk pesan user */
+            align-self: flex-end; /* Pesan user berada di kanan */
+            border-top-right-radius: 0; /* Agar sudut kanan atas tidak melengkung */
+            border-bottom-left-radius: 20px; /* Sudut kiri bawah tetap melengkung */
+        }
+
+        /* Gaya untuk pesan dari bot */
+        .bot-message {
+            background-color: #f1f1f1; /* Warna latar belakang untuk pesan bot */
+            align-self: flex-start; /* Pesan bot berada di kiri */
+            border-top-left-radius: 0; /* Agar sudut kiri atas tidak melengkung */
+            border-bottom-right-radius: 20px; /* Sudut kanan bawah tetap melengkung */
+        }
+
+        /* Gaya untuk teks pesan */
+        .message-text {
+            max-width: 80%; /* Lebar teks pesan yang tidak terlalu lebar */
+            word-wrap: break-word; /* Memastikan teks panjang tetap terbungkus */
+        }
+
+        /* Menambahkan sedikit ruang pada setiap bubble */
+        .message-text {
+            padding: 10px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        /* Mengatur agar container chat memiliki margin dan padding yang sesuai */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            overflow-y: auto;
+            max-height: 500px; /* Menentukan tinggi maksimal */
+        }
+
+        /* Untuk tampilan dark mode */
+        .dark-mode .message {
+            background-color: #333;
+            color: #fff;
+        }
+
+        .dark-mode .message-logo {
+            border: 2px solid #fff; /* Menambahkan border putih untuk logo di dark mode */
+        }
+
+        .dark-mode .message-text {
+            color: #fff;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-container input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .input-container button {
+            padding: 10px 20px;
+            background: #4caf50; /* Ganti warna background menjadi hijau */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .input-container button:hover {
+            background: #388e3c; /* Ganti warna hover menjadi hijau yang lebih gelap */
+        }
+
+        .error-message {
+            color: red;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+        
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="dashboard">
+            <!-- Logo image placed here -->
+            <img src="{{ url_for('static', filename='picture/logo.png') }}" alt="Audiophilez Logo" class="logo">
+
+            <h2 class="dashboard-title">
+                <i class="fas fa-headphones"></i>
+                Audiophile
+            </h2>
+
+            <div class="metric-card">
+                <div class="metric-header">
+                    <div class="metric-title">Total Percakapan</div>
+                </div>
+                <div class="metric-value" id="total-messages">0</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-header">
+                    <div class="metric-title">Durasi Percakapan</div>
+                </div>
+                <div class="metric-value" id="session-time">0:00</div>
+            </div>
+            
+            <div class="toggle-container">
+                <label class="toggle">
+                    <input type="checkbox" id="theme-toggle">
+                    <span class="slider">
+                        <span class="sun-icon"><i class="fas fa-sun"></i></span>
+                        <span class="moon-icon"><i class="fas fa-moon"></i></span>
+                    </span>
+                </label>
+            </div>
+            
+        </div>
+
+        <!-- Chat container remains the same -->
+        <div class="chat-container">
+            <div class="chat-header">
+                <div class="chat-title">
+                    Chatbot Ai - Audiophilez
+                </div>
+            </div>
+            <div class="chat-messages" id="chat-messages">
+                <div class="message bot-message">
+                    <div class="message-icon">
+                        <img src="https://plus.unsplash.com/premium_photo-1682023585957-f191203ab239?q=80&w=1984&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Headset Logo" class="message-logo">
+                    </div>
+                    <div class="message-text">
+                        Hi saya Chatbot Ai - Audiophilez, bagaimana saya bisa membantu Anda hari ini?
+                    </div>
+                </div>
+            </div>
+            <div id="error-container" class="error-message"></div>
+            <div class="input-container">
+                <input type="text" id="user-input" placeholder="Type your message...">
+                <button onclick="sendMessage()">
+                    <i class="fas fa-paper-plane"></i>
+                    Send
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Ilham Maryan Mahantara. All rights reserved. <a href="https://github.com/buriihenry/chatbot"
+                target="_blank">Lihat proyek yang saya modifikasi di GitHub</a></p>
+    </footer>
+
+    <script>
+        let totalMessages = 0;
+        let startTime = Date.now();
+    
+        function updateDashboard() {
+            document.getElementById('total-messages').textContent = totalMessages;
+    
+            const sessionDuration = Math.floor((Date.now() - startTime) / 1000);
+            const minutes = Math.floor(sessionDuration / 60);
+            const seconds = sessionDuration % 60;
+            document.getElementById('session-time').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+    
+        setInterval(updateDashboard, 1000); // Update dashboard every second
+    
+        const API_URL = 'http://127.0.0.1:5000/get_response';
+    
+        function showError(message) {
+            const errorContainer = document.getElementById('error-container');
+            errorContainer.textContent = message;
+            errorContainer.style.display = 'block';
+            setTimeout(() => {
+                errorContainer.style.display = 'none';
+            }, 5000);
+        }
+    
+        function addMessage(message, isUser) {
+            const messagesDiv = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+    
+            if (isUser) {
+                messageDiv.innerHTML = `
+                    <div class="message-icon">
+                        <img src="https://images.unsplash.com/photo-1531860898813-8cecde84646c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="User Profile Logo" class="message-logo">
+                    </div>
+                    <div class="message-text">${message}</div>
+                `;
+            } else {
+                messageDiv.innerHTML = `
+                    <div class="message-icon">
+                        <img src="https://plus.unsplash.com/premium_photo-1682023585957-f191203ab239?q=80&w=1984&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Headset Logo" class="message-logo">
+                    </div>
+                    <div class="message-text">${message}</div>
+                `;
+            }
+    
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            totalMessages++;
+            updateDashboard();
+        }
+    
+        function showLoading() {
+            const messagesDiv = document.getElementById('chat-messages');
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'message bot-message';
+            loadingDiv.id = 'loading-message';
+            loadingDiv.innerHTML = `
+                <div class="message-icon">
+                    <img src="https://plus.unsplash.com/premium_photo-1682023585957-f191203ab239?q=80&w=1984&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Loading Logo" class="message-logo">
+                </div>
+                <div class="message-text">Loading...</div>
+            `;
+            messagesDiv.appendChild(loadingDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+    
+        function hideLoading() {
+            const loadingDiv = document.getElementById('loading-message');
+            if (loadingDiv) {
+                loadingDiv.remove();
+            }
+        }
+    
+        function sendMessage() {
+            const userInput = document.getElementById('user-input').value;
+            if (!userInput.trim()) return;
+    
+            addMessage(userInput, true);
+            document.getElementById('user-input').value = '';
+            showLoading();
+    
+            fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: userInput })
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideLoading();
+                if (data && data.response) {
+                    addMessage(data.response, false);
+                } else {
+                    showError('No response from the server.');
+                }
+            })
+            .catch(error => {
+                hideLoading();
+                showError('Error communicating with the server.');
+                console.error(error);
+            });
+        }
+    
+        // Menambahkan event listener untuk mendeteksi penekanan tombol "Enter"
+        document.getElementById('user-input').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') { // Memeriksa apakah tombol yang ditekan adalah "Enter"
+                event.preventDefault(); // Mencegah form dikirim jika ada form di halaman
+                sendMessage(); // Panggil fungsi sendMessage() saat Enter ditekan
+            }
+        });
+    
+        document.getElementById('theme-toggle').addEventListener('change', (event) => {
+            document.body.classList.toggle('dark-mode', event.target.checked);
+            document.querySelector('.container').classList.toggle('dark-mode', event.target.checked);
+            document.querySelector('.dashboard').classList.toggle('dark-mode', event.target.checked);
+            document.querySelector('.chat-container').classList.toggle('dark-mode', event.target.checked);
+        });
+    </script>    
+    
+</body>
+
+</html>
