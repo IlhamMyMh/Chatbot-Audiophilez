@@ -2,46 +2,59 @@
 # A11.2021.13292
 # A11.4706
 
-# Chatbot Project
+# Proyek Chatbot Audiophilez
 
 Selamat Datang di Proyek Chatbot Audiophilez!
 
-### Installation
+### Panduan Instalasi
+Ikuti langkah-langkah berikut untuk mengatur dan menjalankan proyek chatbot ini di komputer Anda:
 
-* Clone atau download proyek ini ke local machine.
+* Unduh atau Clone Proyek
+Unduh atau clone repository ini ke komputer lokal Anda.
 
-* Buka terminal atau command prompt dan arahkan proyek ke direktori menggunakan `cd`:
-```
+* Arahkan ke Direktori Proyek
+Buka terminal atau command prompt, lalu pindah ke direktori proyek dengan perintah berikut:
+
+...
 cd path/to/chatbot-project
 ```
-* Buat virtual environment :
+
+* Buat Virtual Environment
+Siapkan virtual environment untuk mengelola dependensi proyek:
 
 ```
 python -m venv venv
 ```
 
-* Aktifkan virtual environment:
+* Aktifkan Virtual Environment
+Aktifkan virtual environment yang telah dibuat:
 
 ```
 venv\Scripts\activate
 ```
 
-* Install libraries and dependencies:
+* Pasang Library dan Dependensi
+Instal semua library dan dependensi yang diperlukan dengan menjalankan perintah berikut:
 
 ```
 pip install -r requirements.txt
 ```
-* Cek apakah library dan dependencies sudah memenuhi syarat untuk dijalankan pada logika chatbot
+
+* Verifikasi Dependensi
+Pastikan semua library dan dependensi telah terpasang dengan benar. Jalankan file chatbot untuk menguji:
 
 ```
 python chatbot.py
 ```
 
-* Run
+*Jalankan Aplikasi
+Untuk menjalankan aplikasi chatbot, gunakan perintah: 
 
 ```
 python app.py
 ```
+
+Proyek siap digunakan! 🚀
 
 
 
