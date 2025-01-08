@@ -1,8 +1,9 @@
-# ILHAM MARYAN MAHANTARA
-# A11.2021.13292
-# A11.4706
 
-# Proyek Chatbot Audiophilez
+# Nama : ILHAM MARYAN MAHANTARA
+# Nim : A11.2021.13292
+# Kelompok : A11.4706
+
+# Judul Proyek : Chatbot Audiophilez
 
 Selamat Datang di Proyek Chatbot Audiophilez!
 
